@@ -27,6 +27,7 @@ async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(
         security
     ),
+    db=Depends(get_db),
 ):
 
     token = credentials.credentials
@@ -38,14 +39,27 @@ async def get_current_user(
             settings.SECRET_KEY,
             algorithms=[settings.ALGORITHM],
         )
-        print(payload)
+        user_id = int(payload.get("sub", ""))
+        repository = AuthRepository(db)
+        user = await repository.get_by_id(user_id)
+
+        if not user:
+            raise HTTPException(
+                status_code=401,
+                detail="User not found",
+            )
+
         return {
-            "id": int(payload["sub"])
+            "id": user.id,
         }
 
     except JWTError as e:
-        print("JWT ERROR:", repr(e))
         raise HTTPException(
             status_code=401,
             detail=str(e),
+        )
+    except (TypeError, ValueError):
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid token",
         )
