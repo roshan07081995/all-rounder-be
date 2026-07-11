@@ -8,6 +8,9 @@ from app.modules.daily_tasks.router import router as task_router
 from app.modules.monthly_tasks.router import (
     router as monthly_task_router,
 )
+from app.modules.study_topics.router import (
+    router as study_topic_router,
+)
 
 app = FastAPI()
 
@@ -25,6 +28,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(task_router)
 app.include_router(monthly_task_router)
+app.include_router(study_topic_router)
 
 @app.get("/")
 async def health():

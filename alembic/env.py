@@ -9,6 +9,7 @@ from app.core.config import settings
 from app.modules.auth.models import User
 from app.modules.daily_tasks.models import DailyTask
 from app.modules.monthly_tasks.models import MonthlyTaskCompletion
+from app.modules.study_topics.models import StudyTopic
 
 
 # this is the Alembic Config object, which provides
